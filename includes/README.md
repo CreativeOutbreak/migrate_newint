@@ -19,7 +19,7 @@ tagsSQL.inc
 -----------
 Tags(taxonomy) was the first class made for migration as it's the most simple migration of the lot.  It just brings across the name and a short description.
 
-usersSQL.inc
+[usersSQL.inc](https://github.com/CreativeOutbreak/migrate_newint/blob/master/includes/usersSQL.inc)
 ------------
-User migration is slightly more complicated than tags as it uses the [prepareRow function](https://github.com/CreativeOutbreak/migrate_newint/blob/master/includes/usersSQL.inc#L88) to manipulate the rows before the get inputted.  This was for a couple of reasons, one to switch the user role depending whether the user has a password or not and secondly to set a defualt password as we can't decrypt the current passwords.  We also do a little bit of fiddling with the first and last name to make a user name.
+User migration is slightly more complicated than tags as it uses the [prepareRow function](https://github.com/CreativeOutbreak/migrate_newint/blob/master/includes/usersSQL.inc#L88) to manipulate the rows before the get inputted.  This was for a couple of reasons, one to [switch the user role depending whether the user has a password or not](https://github.com/CreativeOutbreak/migrate_newint/blob/master/includes/usersSQL.inc#L90-L95) and secondly to [set a defualt email & password](https://github.com/CreativeOutbreak/migrate_newint/blob/master/includes/usersSQL.inc#L97-L100) as we can't decrypt the current passwords and not everyone has an email address.  We also do a little bit of [fiddling with the first and last name](https://github.com/CreativeOutbreak/migrate_newint/blob/master/includes/usersSQL.inc#L101-L111) to make a user name.
 
