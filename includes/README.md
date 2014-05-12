@@ -3,16 +3,16 @@ Migration Include Files
 All the classes are pretty self explanitory from their names, but here is a little more detail.
 
 
-### [abstract.inc](https://github.com/CreativeOutbreak/migrate_newint/blob/master/includes/abstract.inc)
+#### [abstract.inc](https://github.com/CreativeOutbreak/migrate_newint/blob/master/includes/abstract.inc)
 This file contains the abstract bass classes that the actually working migration classes migrate from.
 
-[#### blogArticleRevisionSQL.inc](https://github.com/CreativeOutbreak/migrate_newint/blob/master/includes/blogArticleRevisionSQL.inc)
+#### [blogArticleRevisionSQL.inc](https://github.com/CreativeOutbreak/migrate_newint/blob/master/includes/blogArticleRevisionSQL.inc)
 This class migrates all the blog article revisions. It's pretty much the same as the blog article migration, except it has a version id and it's all article that version != 1, where as the blog article migration only migrates article that version = 1;
 
-###### [blogArticleSQL.inc](https://github.com/CreativeOutbreak/migrate_newint/blob/master/includes/blogArticleSQL.inc)
+#### [blogArticleSQL.inc](https://github.com/CreativeOutbreak/migrate_newint/blob/master/includes/blogArticleSQL.inc)
 As explained above, this class is pretty much the same as the blog revision migration except it doesn't except a version number and the database view created for it on hold first version of all the articles.
 
-##### [tagsSQL.inc](https://github.com/CreativeOutbreak/migrate_newint/blob/master/includes/tagsSQL.inc)
+#### [tagsSQL.inc](https://github.com/CreativeOutbreak/migrate_newint/blob/master/includes/tagsSQL.inc)
 Tags(taxonomy) was the first class made for migration as it's the most simple migration of the lot.  It just brings across the name and a short description.
 
 #### [usersSQL.inc](https://github.com/CreativeOutbreak/migrate_newint/blob/master/includes/usersSQL.inc)
