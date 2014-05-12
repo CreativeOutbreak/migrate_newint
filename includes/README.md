@@ -6,7 +6,7 @@ All the classes are pretty self explanitory from their names, but here is a litt
 ### [abstract.inc](https://github.com/CreativeOutbreak/migrate_newint/blob/master/includes/abstract.inc)
 This file contains the abstract bass classes that the actually working migration classes migrate from.
 
-### [blogArticleRevisionSQL.inc](https://github.com/CreativeOutbreak/migrate_newint/blob/master/includes/blogArticleRevisionSQL.inc)
+[#### blogArticleRevisionSQL.inc](https://github.com/CreativeOutbreak/migrate_newint/blob/master/includes/blogArticleRevisionSQL.inc)
 This class migrates all the blog article revisions. It's pretty much the same as the blog article migration, except it has a version id and it's all article that version != 1, where as the blog article migration only migrates article that version = 1;
 
 ###### [blogArticleSQL.inc](https://github.com/CreativeOutbreak/migrate_newint/blob/master/includes/blogArticleSQL.inc)
