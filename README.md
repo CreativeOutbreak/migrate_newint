@@ -21,5 +21,5 @@ Our legacy data is in a PostgreSQL database and we are planning on have the new 
 This has made the migration setup slightly tricker as you need to tell the migrate module not to link the databases, as it's not possible in this situation.
 
 The way we've haddles this is to have an [abstract class](https://github.com/CreativeOutbreak/migrate_newint/blob/master/includes/abstracts.inc#L23) that deals with the database connection and makes sure that the module [doesn't join cross database](https://github.com/CreativeOutbreak/migrate_newint/blob/master/includes/abstracts.inc#L38).
-You can see this code in the second class in [abstracts.inc](https://github.com/CreativeOutbreak/migrate_newint/blob/master/includes/abstracts.inc)
+You can see this code in the [second class in abstracts.inc](https://github.com/CreativeOutbreak/migrate_newint/blob/master/includes/abstracts.inc#L23)
 
