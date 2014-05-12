@@ -1,5 +1,5 @@
-New Internationalist Data Migrate Module
-=======================================
+New Internationalist Data Migrate
+=================================
 
 This module is an extention of the drupal migrate module, created to migrate all the legacy data from Bricolage to Drupal.
 
