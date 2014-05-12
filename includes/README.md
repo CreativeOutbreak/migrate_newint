@@ -3,7 +3,7 @@ Migration Include Files
 All the classes are pretty self explanitory from their names, but here is a little more detail.
 
 
-#### [abstract.inc](https://github.com/CreativeOutbreak/migrate_newint/blob/master/includes/abstract.inc)
+#### [abstracts.inc](https://github.com/CreativeOutbreak/migrate_newint/blob/master/includes/abstracts.inc)
 This file contains the abstract bass classes that the actually working migration classes migrate from.
 
 #### [blogArticleRevisionSQL.inc](https://github.com/CreativeOutbreak/migrate_newint/blob/master/includes/blogArticleRevisionSQL.inc)
