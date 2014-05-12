@@ -9,6 +9,11 @@ We are using a dump of the live database take around the 30/04/14.
 The database dump can be downloaded from [dev2.newint.org](http://dev2.newint.org/files/newint2.sql.tar.gz) UserName: file_admin  Password: RadicalFish7
 We have also used [SchemaSpy](http://schemaspy.sourceforge.net/) to create a visual representation of the database relationship that can also be downloaded from [dev2.newint.org](http://dev2.newint.org/files/newint_org-db-structure.tar.gz)
 
+Login (dev.newint.org)
+---------------------
+* UserName: `file_admin`
+* Password: `RadicalFish7`
+
 
 PostgreSQL to MySQL/MariaDB
 --------------------------
