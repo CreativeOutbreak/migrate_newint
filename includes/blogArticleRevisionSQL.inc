@@ -10,7 +10,7 @@
 class NewIntBlogArticleRevisionSQLMigration extends NewIntPSQLMigration {
     public function __construct($group) {
         $this->description = 'Pull tags from legacy database that has been created from newint bricolage system';
-        $this->psql_table = 'view_blog_aticle_revisions';
+        $this->psql_table = 'view_blog_article_revisions';
         $this->psql_alias = 'b';
         $this->psql_fields = array('story__id', 'version', 'usr__id', 'slug', 'name', 'teaser', 'body');
         parent::__construct(MigrateGroup::getInstance('blog'));
