@@ -25,7 +25,8 @@ class NewIntUserSQLMigration extends NewIntPSQLMigration {
                 'alias' => $this->psql_alias,
                 )
              ),
-            MigrateDestinationUser::getKeySchema()
+            MigrateDestinationUser::getKeySchema(),
+            'legacy'
         );
         
         $this->addFieldMapping('field_first_name', 'fname');

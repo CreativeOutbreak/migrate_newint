@@ -12,7 +12,7 @@ class NewIntBlogArticleSQLMigration extends NewIntPSQLMigration {
         $this->description = 'Pull tags from legacy database that has been created from newint bricolage system';
         $this->psql_table = 'view_blog_article_v1';
         $this->psql_alias = 'b';
-        $this->psql_fields = array('story__id', 'version', 'usr__id', 'slug', 'name', 'teaser', 'body_text', 'first_publish_date', 'publish_date', 'publish_status', 'keywords', 'primary_uri', 'new_uri');
+        $this->psql_fields = array('story__id', 'version', 'usr__id', 'slug', 'name', 'teaser', 'body_text', 'first_publish_date', 'publish_date', 'publish_status', 'keywords', 'primary_uri', 'new_uri', 'usr_destid');
         parent::__construct(MigrateGroup::getInstance('blog'));
         
         $this->destination = new MigrateDestinationNode('blog');
@@ -25,14 +25,15 @@ class NewIntBlogArticleSQLMigration extends NewIntPSQLMigration {
                     'alias' => 'b',
                 )
             ),
-            MigrateDestinationNode::getKeySchema()
+            MigrateDestinationNode::getKeySchema(),
+            'legacy'
         );
 
 
 
 
         $this->addFieldMapping('title', 'name');
-        //$this->addFieldMapping('uid', 'usr__id');
+        $this->addFieldMapping('uid', 'usr_destid');
 
         $this->addFieldMapping('created', 'first_publish_date');
         $this->addFieldMapping('status', NULL)->defaultValue(1);
@@ -58,7 +59,6 @@ class NewIntBlogArticleSQLMigration extends NewIntPSQLMigration {
         }
         
         $um_array = array(
-            'uid',
             'revision_uid',
             'changed',
             'promote',
@@ -90,8 +90,7 @@ class NewIntBlogArticleSQLMigration extends NewIntPSQLMigration {
     
     }
 
-    public function is_image($path)
-    {
+    public function is_image($path) {
         $a = getimagesize($path);
         $image_type = $a[2];
          
@@ -101,8 +100,9 @@ class NewIntBlogArticleSQLMigration extends NewIntPSQLMigration {
         }
         return false;
     }
+
     public function prepareRow($row) {
-        $row->keywords = explode(',', $row->keywords); //array('football');
+        $row->keywords = explode(',', $row->keywords);
         $row->primary_uri = rtrim(ltrim($row->primary_uri, '/'), '/');
         if(isset($row->new_uri)) {
             $file_headers = @get_headers($row->new_uri);

@@ -28,7 +28,8 @@ class NewIntTermSQLMigration extends NewIntPSQLMigration {
                     'alias' => $this->psql_alias,
                 )
             ),
-            MigrateDestinationTerm::getKeySchema()
+            MigrateDestinationTerm::getKeySchema(),
+            'legacy'
         );
 
 
