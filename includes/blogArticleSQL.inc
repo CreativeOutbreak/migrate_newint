@@ -7,19 +7,29 @@
  */
 
 
-class NewIntBlogArticleSQLMigration extends NewIntPSQLMigration {
+class NewIntBlogArticleSQLMigration extends NewIntMigration {
     public function __construct($group) {
+        $this->timeLimit = 0;
         $this->description = 'Pull tags from legacy database that has been created from newint bricolage system';
+        $this->dependencies = array('NewIntTermSQL', 'NewIntUserSQL'); 
         $this->psql_table = 'view_blog_article_v1';
         $this->psql_alias = 'b';
-        $this->psql_fields = array('story__id', 'version', 'usr__id', 'slug', 'name', 'teaser', 'body_text', 'first_publish_date', 'publish_date', 'publish_status', 'keywords', 'primary_uri', 'new_uri', 'usr_destid');
+        $this->psql_fields = array('id', 'version', 'usr__id', 'slug', 'name', 'teaser', 'body_text', 'first_publish_date', 'publish_date', 'publish_status', 'keywords', 'primary_uri', 'new_uri');
         parent::__construct(MigrateGroup::getInstance('blog'));
+
+        $this->psql_query = $this->getConnection()->select($this->psql_table, $this->psql_alias)
+                ->fields($this->psql_alias, $this->psql_fields);
+
+        $this->psql_query->leftJoin('migrate_map_newintusersql', 't8', "b.usr__id = t8.sourceid1");
+        $this->psql_query->addField('t8', 'destid1');
         
+        $this->source = new MigrateSourceSQL($this->psql_query, array(), NULL, array('map_joinable' => FALSE));
+
         $this->destination = new MigrateDestinationNode('blog');
 
         $this->map = new MigrateSQLMap($this->machineName,
             array(
-                'story__id' => array(
+                'id' => array(
                     'type' => 'int',
                     'not null' => TRUE,
                     'alias' => 'b',
@@ -33,19 +43,18 @@ class NewIntBlogArticleSQLMigration extends NewIntPSQLMigration {
 
 
         $this->addFieldMapping('title', 'name');
-        $this->addFieldMapping('uid', 'usr_destid');
+        $this->addFieldMapping('uid', 'destid1');
 
+        $this->addFieldMapping('changed', 'first_publish_date');
         $this->addFieldMapping('created', 'first_publish_date');
         $this->addFieldMapping('status', NULL)->defaultValue(1);
-        $this->addFieldMapping('revision', 'version');
         $this->addFieldMapping('log', NULL)->defaultValue(t('First Import'));
         //$this->addFieldMapping('revision_uid', 'usr__id');
         $this->addFieldMapping('body', 'body_text');
         $this->addFieldMapping('body:summary', 'teaser');
         $this->addFieldMapping('body:format', NULL)->defaultValue('filtered_html');
         $this->addFieldMapping('field_blog_image', 'new_uri');
-        $this->addFieldMapping('field_blog_tags', 'keywords'); //->arguments(array('source_type' => 'tid'));;
-        //$this->addFieldMapping('field_blog_tags:source_type', NULL)->defaultValue('tid');
+        $this->addFieldMapping('field_blog_tags', 'keywords');
         $this->addFieldMapping('field_blog_tags:ignore_case', NULL)->defaultValue('1');
         $this->addFieldMapping('field_blog_tags:create_term', NULL)->defaultValue('1');
         // We conditionally DNM these fields, so your field mappings will be clean
@@ -59,8 +68,8 @@ class NewIntBlogArticleSQLMigration extends NewIntPSQLMigration {
         }
         
         $um_array = array(
+            'revision',
             'revision_uid',
-            'changed',
             'promote',
             'sticky',
             'language',
@@ -102,6 +111,7 @@ class NewIntBlogArticleSQLMigration extends NewIntPSQLMigration {
     }
 
     public function prepareRow($row) {
+        dd($row);
         $row->keywords = explode(',', $row->keywords);
         $row->primary_uri = rtrim(ltrim($row->primary_uri, '/'), '/');
         if(isset($row->new_uri)) {

@@ -8,13 +8,14 @@
 
 
 class NewIntUserSQLMigration extends NewIntPSQLMigration {
+    public $ulist = array(); 
     public function __construct() {
         $this->description = 'Pull users from legacy database that has been created from newint bricolage system';
         $this->psql_table = 'view_users';
         $this->psql_alias = 'u';
         $this->psql_fields = array('id', 'prefix', 'fname', 'mname', 'lname', 'suffix', 'login', 'password', 'active', 'email');
         parent::__construct(MigrateGroup::getInstance('blog'));
-        
+
         $this->destination = new MigrateDestinationUser();
         
         $this->map = new MigrateSQLMap($this->machineName,
@@ -100,13 +101,33 @@ class NewIntUserSQLMigration extends NewIntPSQLMigration {
             $row->email = "example@example.com";
         }
         $login = "";
-        if(empty($row->login)) {
+        if(!empty($row->login)) {
+            $login = $row->login;
+            if(isset($this->ulist[$login])) {
+                $this->ulist[$login] += 1;
+                $login .= $this->ulist[$login];
+            }
+            else {
+                $this->ulist[$login] = 0;
+            }
+            $row->login = $login;
+        }
+        else {
         
             if(!empty($row->fname)) {
                 $login = trim(strtolower($row->fname));
             }
             if(!empty($row->lname)) {
                 $login .= ".".trim(strtolower($row->lname));
+            }
+            if($login === ""){ $login = "Anonymous"; }
+            $login = str_replace(" ", "", preg_replace('/[[:^print:]]/', '', $login));
+            if(isset($this->ulist[$login])) {
+                $this->ulist[$login] += 1;
+                $login .= $this->ulist[$login];
+            }
+            else {
+                $this->ulist[$login] = 0;
             }
             $row->login = $login;    
         }

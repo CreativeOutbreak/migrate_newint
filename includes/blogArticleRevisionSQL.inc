@@ -10,16 +10,30 @@
 class NewIntBlogArticleRevisionSQLMigration extends NewIntPSQLMigration {
     public function __construct($group) {
         $this->description = 'Pull all blog revisions from newint bricolage system';
+        $this->dependencies = array('NewIntTermSQL', 'NewIntUserSQL','NewIntBlogArticleSQL');
         $this->psql_table = 'view_blog_article_revisions';
         $this->psql_alias = 'b';
-        $this->psql_fields = array('story__id', 'version', 'usr__id', 'slug', 'name', 'teaser', 'body_text', 'first_publish_date', 'publish_date', 'publish_status', 'keywords', 'primary_uri', 'new_uri', 'usr_destid', 'nid');
+        $this->psql_fields = array('id', 'version', 'usr__id', 'slug', 'name', 'teaser', 'body_text', 'first_publish_date', 'publish_date', 'publish_status', 'keywords', 'primary_uri', 'new_uri');
         parent::__construct(MigrateGroup::getInstance('blog'));
+
+        $this->psql_query = $this->getConnection()->select($this->psql_table, $this->psql_alias)
+                ->fields($this->psql_alias, $this->psql_fields);
+
+        $this->psql_query->leftJoin('migrate_map_newintusersql', 't8', "b.usr__id = t8.sourceid1");
+        $this->psql_query->addField('t8', 'destid1', 'usr_destid');
         
+        $this->psql_query->leftJoin('migrate_map_newintblogarticlesql', 't9', "b.id = t9.sourceid1");
+        $this->psql_query->addField('t9', 'destid1', 'nid');
+        
+        $this->source = new MigrateSourceSQL($this->psql_query, array(), NULL, array('map_joinable' => FALSE));
+
+
+
         $this->destination = new MigrateDestinationNodeRevision('blog');
 
         $this->map = new MigrateSQLMap($this->machineName,
             array(
-                'story__id' => array(
+                'id' => array(
                     'type' => 'int',
                     'not null' => TRUE,
                     'alias' => 'b',
@@ -38,7 +52,7 @@ class NewIntBlogArticleRevisionSQLMigration extends NewIntPSQLMigration {
         $this->addFieldMapping('changed', 'publish_date');
         $this->addFieldMapping('status', NULL)->defaultValue(1);
         $this->addFieldMapping('revision', NULL)->defaultValue(1);
-        $this->addFieldMapping('log', NULL)->defaultValue(t('First Import'));
+        $this->addFieldMapping('log', NULL)->defaultValue(t('New Revision'));
         $this->addFieldMapping('revision_uid', 'usr_destid');
         $this->addFieldMapping('body', 'body_text');
         $this->addFieldMapping('body:summary', 'teaser');
@@ -48,6 +62,7 @@ class NewIntBlogArticleRevisionSQLMigration extends NewIntPSQLMigration {
         $this->addFieldMapping('field_blog_tags:ignore_case', NULL)->defaultValue('1');
         $this->addFieldMapping('field_blog_tags:create_term', NULL)->defaultValue('1');
         $this->addFieldMapping('nid', 'nid');
+        $this->addFieldMapping('vid', 'version');
         //$this->addFieldMapping('field_blog_tags', 'keywords');
         // We conditionally DNM these fields, so your field mappings will be clean
         // whether or not you have path and or pathauto enabled

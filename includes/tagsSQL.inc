@@ -16,7 +16,7 @@ class NewIntTermSQLMigration extends NewIntPSQLMigration {
         $this->psql_fields = array('id', 'name');
         parent::__construct(MigrateGroup::getInstance('blog'));
 
-        
+
         $this->destination = new MigrateDestinationTerm('newint_tags');
 
         $this->map = new MigrateSQLMap($this->machineName,

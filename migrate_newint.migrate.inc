@@ -35,7 +35,7 @@ function migrate_newint_migrate_api() {
                 'class_name' => 'NewIntBlogArticleSQLMigration',
                 'group_name' => 'blog',
             ),
-            'NewIntBlogArticleiRevisionSQL' => array(
+            'NewIntBlogArticleRevisionSQL' => array(
                 'class_name' => 'NewIntBlogArticleRevisionSQLMigration',
                 'group_name' => 'blog',
             ),
