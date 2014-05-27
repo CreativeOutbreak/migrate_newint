@@ -11,9 +11,9 @@ class NewIntBlogArticleRevisionSQLMigration extends NewIntPSQLMigration {
     public function __construct($group) {
         $this->description = 'Pull all blog revisions from newint bricolage system';
         $this->dependencies = array('NewIntTermSQL', 'NewIntUserSQL','NewIntBlogArticleSQL');
-        $this->psql_table = 'view_blog_article_revisions';
+        $this->psql_table = 'view_blog_article_wt_revisions';
         $this->psql_alias = 'b';
-        $this->psql_fields = array('id', 'version', 'usr__id', 'slug', 'name', 'teaser', 'body_text', 'first_publish_date', 'publish_date', 'publish_status', 'keywords', 'primary_uri', 'new_uri');
+        $this->psql_fields = array('id', 'version', 'usr__id', 'slug', 'note', 'name', 'teaser', 'body_text', 'first_publish_date', 'publish_date', 'publish_status', 'keywords', 'primary_uri', 'new_uri', 'publish_time');
         parent::__construct(MigrateGroup::getInstance('blog'));
 
         $this->psql_query = $this->getConnection()->select($this->psql_table, $this->psql_alias)
@@ -48,11 +48,11 @@ class NewIntBlogArticleRevisionSQLMigration extends NewIntPSQLMigration {
 
         $this->addFieldMapping('title', 'name');
         //$this->addFieldMapping('uid', 'usr_destid');
-
-        $this->addFieldMapping('changed', 'publish_date');
-        $this->addFieldMapping('status', NULL)->defaultValue(1);
+        //$this->addFieldMapping('created', 'first_publish_date');
+        $this->addFieldMapping('changed', 'publish_time');
+        $this->addFieldMapping('status', 'publish_status')->defaultValue(1);
         $this->addFieldMapping('revision', NULL)->defaultValue(1);
-        $this->addFieldMapping('log', NULL)->defaultValue(t('New Revision'));
+        $this->addFieldMapping('log', 'note')->defaultValue(t('New Revision'));
         $this->addFieldMapping('revision_uid', 'usr_destid');
         $this->addFieldMapping('body', 'body_text');
         $this->addFieldMapping('body:summary', 'teaser');
@@ -118,6 +118,19 @@ class NewIntBlogArticleRevisionSQLMigration extends NewIntPSQLMigration {
     }
 
     public function prepareRow($row) {
+        
+        /*if(!isset($row->publish_time)) {
+            $day = "+";
+            $day .= $row->version;
+            $day .= " days";
+            $time = strtotime($day, strtotime($row->first_publish_date));
+            $day = date('Y-m-d H:i:s', $time);
+            $row->publish_time = $day;
+            //dd($row->publish_time); 
+        }*/
+        //dd("to: ".$row->publish_time." from: ".$row->first_publish_date);
+        dd($row);
+        $row->publish_status = ($row->publish_status === 'f' ? '0' : '1');
         $row->keywords = explode(',', $row->keywords);
         $row->primary_uri = rtrim(ltrim($row->primary_uri, '/'), '/');
         if(isset($row->new_uri)) {
