@@ -19,7 +19,7 @@ function migrate_newint_migrate_api() {
         'api' => 2,
         'groups' => array(
             'blog' => array(
-                'title' => t('Blog')
+                'title' => t('Blog'),
             ),
         ),
         'migrations' => array(
@@ -37,6 +37,10 @@ function migrate_newint_migrate_api() {
             ),
             'NewIntBlogArticleRevisionSQL' => array(
                 'class_name' => 'NewIntBlogArticleRevisionSQLMigration',
+                'group_name' => 'blog',
+            ),
+            'NewIntCommentUserSQL' => array(
+                'class_name' => 'NewIntCommentUserSQLMigration',
                 'group_name' => 'blog',
             ),
         ),

@@ -12,9 +12,9 @@ class NewIntBlogArticleSQLMigration extends NewIntMigration {
         $this->timeLimit = 0;
         $this->description = 'Pull tags from legacy database that has been created from newint bricolage system';
         $this->dependencies = array('NewIntTermSQL', 'NewIntUserSQL'); 
-        $this->psql_table = 'view_blog_article_wt_v1';
+        $this->psql_table = 'view_blog_article_wtac_v1';
         $this->psql_alias = 'b';
-        $this->psql_fields = array('id', 'version', 'usr__id', 'slug', 'note', 'name', 'teaser', 'body_text', 'first_publish_date', 'publish_date', 'publish_status', 'keywords', 'primary_uri', 'new_uri');
+        $this->psql_fields = array('id', 'version', 'usr__id', 'slug', 'note', 'name', 'teaser', 'body_text', 'first_publish_date', 'publish_date', 'publish_status', 'keywords', 'primary_uri', 'new_uri', 'contrib');
         parent::__construct(MigrateGroup::getInstance('blog'));
 
         $this->psql_query = $this->getConnection()->select($this->psql_table, $this->psql_alias)
@@ -44,6 +44,7 @@ class NewIntBlogArticleSQLMigration extends NewIntMigration {
 
         $this->addFieldMapping('title', 'name');
         $this->addFieldMapping('uid', 'destid1');
+        $this->addFieldMapping('field_contributors', 'contrib');
 
         $this->addFieldMapping('changed', 'first_publish_date');
         $this->addFieldMapping('created', 'first_publish_date');
@@ -112,9 +113,9 @@ class NewIntBlogArticleSQLMigration extends NewIntMigration {
 
     public function prepareRow($row) {
         
-        dd($row);
-        $row->publish_status = ($row->publish_status === 'f' ? '0' : '1');
+        $row->publish_status = ($row->publish_status ? '1' : '0');
         $row->keywords = explode(',', $row->keywords);
+        $row->contrib = explode(',', $row->contrib);
         $row->primary_uri = rtrim(ltrim($row->primary_uri, '/'), '/');
         if(isset($row->new_uri)) {
             $file_headers = @get_headers($row->new_uri);
@@ -127,6 +128,7 @@ class NewIntBlogArticleSQLMigration extends NewIntMigration {
                 $row->new_uri = NULL;
             }
         }
+        //dd($row);
     } 
 }
 
